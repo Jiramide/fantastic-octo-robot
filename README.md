@@ -1,4 +1,4 @@
-# fantastic-octo=robot
+# fantastic-octo-robot
 
 A tower defense game with friendly fire, where you're the target.
 Name pending.
