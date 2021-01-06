@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
     public float MaxSprintUnits = 10.0f;
     public float SprintDegenerationRate = 2.0f;
     public float SprintRegenerationRate = 4.0f;
+    
+    [Header("References")]
+    public GameObject PlayerSprite;
+    public Animator PlayerAnimator;
 
     [Header("Player State")]
     public float CurrentSprintUnits;
@@ -63,9 +67,12 @@ public class Player : MonoBehaviour
             }
         }
 
-        Debug.Log(speedModifer);
+        PlayerAnimator.SetFloat("Horizontal", PlayerRigidbody.velocity.x);
+        PlayerAnimator.SetFloat("Vertical", PlayerRigidbody.velocity.z);
 
-        PlayerRigidbody.MovePosition(PlayerRigidbody.position + moveDirection.normalized * speedModifer * Time.deltaTime);
+        PlayerRigidbody.AddForce(
+            moveDirection * speedModifer * PlayerRigidbody.mass
+        );
     }
 
     void FixedUpdate()
