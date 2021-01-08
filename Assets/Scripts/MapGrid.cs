@@ -5,30 +5,59 @@ using UnityEngine;
 public class MapGrid : MonoBehaviour
 {
 
-    public int SizeX;
-    public int SizeY;
-    public List<List<Node>> Nodes;
+    public GameObject tilePrefab;
+    public List<List<MapTile>> nodes;
 
-    void Start() 
+    public void GenerateMap(int sizeX, int sizeY)
     {
-        Nodes = new List<List<Node>>();
+        nodes = new List<List<MapTile>>();
 
-        for (int x = 0; x < SizeX; x++)
+        for (int x = 0; x < sizeX; x++)
         {
-            List<Node> row = new List<Node>();
+            List<MapTile> col = new List<MapTile>();
+            nodes.Add(col);
 
-            for (int y = 0; y < SizeY; y++)
+            for (int y = 0; y < sizeY; y++)
             {
-                row.Add(new Node());
-            }
+                GameObject tile = Instantiate(tilePrefab, transform);
+                MapTile tileInfo = tile.GetComponent<MapTile>();
 
-            Nodes.Add(row);
+                tile.name = "(" + x + ", " + y + ")";
+                tile.transform.position = new Vector3(x, -y, 0.0f);
+                
+                if (x > 0)
+                {
+                    MapTile neighbourLeft = nodes[x - 1][y];
+
+                    tileInfo.SetNeighbour(MapTile.Neighbour.Left, neighbourLeft);
+                    neighbourLeft.SetNeighbour(MapTile.Neighbour.Right, tileInfo);
+                }
+
+                if (y > 0)
+                {
+                    MapTile neighbourUp = nodes[x][y - 1];
+
+                    tileInfo.SetNeighbour(MapTile.Neighbour.Up, neighbourUp);
+                    neighbourUp.SetNeighbour(MapTile.Neighbour.Down, tileInfo);
+                }
+
+                /*
+                tile.GetComponent<SpriteRenderer>().color = (x + y) % 2 == 0
+                    ? new Color(0.7f, 0.7f, 0.7f, 1.0f)
+                    : new Color(0.9f, 0.9f, 0.9f, 1.0f); */
+
+                col.Add(tileInfo);
+            }
         }
     }
 
-    public Node GetAt(int x, int y)
+    public void OnButtonPress()
     {
-        return Nodes[x][y];
+        GenerateMap(20, 10);
+    }
+
+    void DestroyMap()
+    {
     }
 
 }
