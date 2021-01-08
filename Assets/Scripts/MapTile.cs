@@ -14,12 +14,20 @@ public class MapTile : MonoBehaviour
 
     public GameObject occupant;
 
+    /// <summary>
+    /// An enum identifying a neighbour
+    /// </summary>
+    /// The order starts from up, going clockwise.
+    /// The values attached to each enum are for the use of SurroundingAwareSprite
+    /// which uses its integer value as an index. Due to the nature of Aggregate
+    /// being a left fold, it's necessary for the values to decrease as the direction
+    /// goes clockwise.
     public enum Neighbour : int
     {
-        Up = 0,
-        Right,
-        Down,
-        Left
+        Up = 3,
+        Right = 2,
+        Down = 1,
+        Left = 0
     }
 
     void Awake()

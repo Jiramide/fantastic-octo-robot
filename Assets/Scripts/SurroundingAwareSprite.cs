@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,6 @@ public class SurroundingAwareSprite : MonoBehaviour
 
     private List<int> states;
     
-
     void Awake()
     {
         states = new List<int>();
@@ -30,17 +30,8 @@ public class SurroundingAwareSprite : MonoBehaviour
         states[idx] = state;
     }
 
-    private int getSpriteIdx()
-    {
-        int spriteIdx = 0;
-
-        for (int pow = 0; pow < 4; pow++)
-        {
-            spriteIdx += states[pow] * (int)Mathf.Pow(numberOfStates, pow);
-        }
-
-        return spriteIdx;
-    }
+    private int getSpriteIdx() 
+        => states.Aggregate((x, y) => 2 * x + y);
 
     public void UpdateSprite()
     {
