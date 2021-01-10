@@ -2,17 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapTile : MonoBehaviour
+namespace MapTiles
 {
-    
-    private MapTile neighbourUp;
-    private MapTile neighbourDown;
-    private MapTile neighbourLeft;
-    private MapTile neighbourRight;
-
-    private SurroundingAwareSprite spriteManager;
-
-    public GameObject occupant;
 
     /// <summary>
     /// An enum identifying a neighbour
@@ -30,69 +21,83 @@ public class MapTile : MonoBehaviour
         Left = 0
     }
 
-    void Awake()
+    public class MapTile : MonoBehaviour
     {
-        spriteManager = GetComponent<SurroundingAwareSprite>();
-    }
+        
+        private MapTile neighbourUp;
+        private MapTile neighbourDown;
+        private MapTile neighbourLeft;
+        private MapTile neighbourRight;
 
-    public void SetNeighbour(Neighbour direction, MapTile newNeighbour)
-    {
-        spriteManager.SetState(
-            (int) direction,
-            newNeighbour == null ? 0 : 1
-        );
+        private SurroundingAwareSprite spriteManager;
 
-        switch (direction)
+        public GameObject occupant;
+
+        void Awake()
         {
-            case Neighbour.Up:
-                neighbourUp = newNeighbour;
-                break;
-            case Neighbour.Right:
-                neighbourRight = newNeighbour;
-                break;
-            case Neighbour.Down:
-                neighbourDown = newNeighbour;
-                break;
-            case Neighbour.Left:
-                neighbourLeft = newNeighbour;
-                break;
+            spriteManager = GetComponent<SurroundingAwareSprite>();
         }
 
-        spriteManager.UpdateSprite();
-    }
-
-    public MapTile GetNeighbour(Neighbour direction)
-    {
-        // Damn you Unity 2019 for not supporting switch expressions. We could've had something great here.
-        /* 
-        return direction switch {
-            Neighbour.Up => neighbourUp,
-            Neighbour.Right => neighbourRight,
-            Neighbour.Down => neighbourDown,
-            Neighbour.Left => neighbourLeft,
-        }; */
-
-        switch (direction)
+        public void SetNeighbour(Neighbour direction, MapTile newNeighbour)
         {
-            case Neighbour.Up:
-                return neighbourUp;
-            case Neighbour.Right:
-                return neighbourRight;
-            case Neighbour.Down:
-                return neighbourDown;
-            default:
-            // default is here because C# doesn't detect that using case Neighbour.Left is exhaustive and complains how not all codepaths lead to a return value.
-                return neighbourLeft;
+            spriteManager.SetState(
+                (int) direction,
+                newNeighbour == null ? 0 : 1
+            );
+
+            switch (direction)
+            {
+                case Neighbour.Up:
+                    neighbourUp = newNeighbour;
+                    break;
+                case Neighbour.Right:
+                    neighbourRight = newNeighbour;
+                    break;
+                case Neighbour.Down:
+                    neighbourDown = newNeighbour;
+                    break;
+                case Neighbour.Left:
+                    neighbourLeft = newNeighbour;
+                    break;
+            }
+
+            spriteManager.UpdateSprite();
         }
-    }
 
-    void Start()
-    {
+        public MapTile GetNeighbour(Neighbour direction)
+        {
+            // Curse you Unity 2019 for not supporting switch expressions. We could've had something great here.
+            /* 
+            return direction switch {
+                Neighbour.Up => neighbourUp,
+                Neighbour.Right => neighbourRight,
+                Neighbour.Down => neighbourDown,
+                Neighbour.Left => neighbourLeft,
+            }; */
 
-    }
+            switch (direction)
+            {
+                case Neighbour.Up:
+                    return neighbourUp;
+                case Neighbour.Right:
+                    return neighbourRight;
+                case Neighbour.Down:
+                    return neighbourDown;
+                default:
+                // default is here because C# doesn't detect that using case Neighbour.Left is exhaustive and complains how not all codepaths lead to a return value.
+                    return neighbourLeft;
+            }
+        }
 
-    void Update()
-    {
+        void Start()
+        {
+
+        }
+
+        void Update()
+        {
+
+        }
 
     }
 

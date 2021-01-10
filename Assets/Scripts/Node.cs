@@ -2,53 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+namespace Nodes
 {
-    
+
     public enum NodeType
     {
+        Hole,
         Empty,
         Tower0,
         Tower1,
-        Tower2
+        Tower2,
     }
 
-    public NodeType Type;
-    public GameObject NodeObject;
-
-    public Node()
+    public class Node
     {
-        Type = NodeType.Empty;
-    }
+        
+        public NodeType Type { get; set; }
+        public GameObject NodeObject;
 
-    void SetNodeType(NodeType newType)
-    {
-        Type = newType;
-    }
-
-    NodeType GetNodeType()
-    {
-        return Type;
-    }
-
-    public void SetNodeObject(GameObject newNodeObject)
-    {
-        NodeObject nodeObjectInfo = newNodeObject.GetComponent<NodeObject>();
-
-        SetNodeType(nodeObjectInfo.Type);
-        NodeObject = newNodeObject;
-    }
-
-    public void DestroyNodeObject()
-    {
-        if (NodeObject == null)
+        public Node()
         {
-            return;
+            Type = NodeType.Hole;
         }
 
-        Destroy(NodeObject);
-        NodeObject = null;
-        SetNodeType(NodeType.Empty);
+        public void SetNodeObject(GameObject newNodeObject)
+        {
+            NodeObject nodeObjectInfo = newNodeObject.GetComponent<NodeObject>();
+
+            Type = nodeObjectInfo.Type;
+            NodeObject = newNodeObject;
+        }
+
+        public void DestroyNodeObject()
+        {
+            if (NodeObject == null)
+            {
+                return;
+            }
+
+            GameObject.Destroy(NodeObject);
+            NodeObject = null;
+            Type = NodeType.Empty;
+        }
+
     }
 
 }
