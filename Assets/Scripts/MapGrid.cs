@@ -30,7 +30,11 @@ public class MapGrid : MonoBehaviour
                 var newNode = new Node();
 
                 // chooses a random NodeType between Hole and Empty
-                newNode.Type = (NodeType)Random.Range((int)NodeType.Hole, (int)NodeType.Empty + 1); // LOL
+                
+                newNode.Type = Random.Range(0.0f, 1.0f) < density
+                    ? NodeType.Empty
+                    : NodeType.Hole;
+
                 nodes[x, y] = newNode;
             }
         }
