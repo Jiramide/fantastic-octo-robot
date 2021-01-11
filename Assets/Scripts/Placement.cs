@@ -5,26 +5,77 @@ using UnityEngine;
 public class Placement : MonoBehaviour
 {
 
-    public GameObject follow;
-    public Vector3 tileMapOffset;
+    private Camera cam;
+    private GameObject currentlyPickedUp;
+
+    void Awake()
+    {
+        cam = Camera.main;
+    }
+
+    public void PickUp(GameObject pickup)
+    {
+        if (currentlyPickedUp != null)
+        {
+            return;
+        }
+
+        currentlyPickedUp = Instantiate(pickup);
+    }
+
+    private GameObject TileFromMouse()
+    {
+        var mousePosition = Input.mousePosition;
+        var mouseRay = cam.ScreenPointToRay(mousePosition);
+        var raycastHit = Physics2D.GetRayIntersection(mouseRay);
+
+        return raycastHit != null
+            ? raycastHit.transform.gameObject
+            : null;
+    }
+
+    public void PlacePickUp()
+    {
+        Debug.Log("placed down");
+
+        currentlyPickedUp = null;
+    }
 
     void Update()
     {
 
-        Vector3 camPosition = Camera.main.transform.position;
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = Camera.main.nearClipPlane;
+        if (Input.GetMouseButtonDown(0))
+        {
+            var tile = TileFromMouse();
+            if (tile)
+            {
+                tile.GetComponent<SpriteRenderer>().color = Color.gray;
+            }
 
-        Vector3 nearClipPlanePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        Vector3 tileMapPosition = camPosition + (nearClipPlanePosition - camPosition) * camPosition.z / (camPosition.z - nearClipPlanePosition.z);
+         //   PlacePickUp();
+        }
+        if (currentlyPickedUp == null)
+        {
+            // nothing picked up, maybe have camera dragging behaviour here.
+            if (Input.GetMouseButton(0))
+            {
+                cam.transform.Translate(new Vector3(-Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0.0f));
+            }
 
-        Vector3 endPosition = new Vector3(
-            Mathf.Floor(tileMapPosition.x),
-            Mathf.Floor(tileMapPosition.y),
-            Mathf.Floor(tileMapPosition.z)
-        );
+            return; 
+        }
 
-        follow.GetComponent<Transform>().position = endPosition + tileMapOffset;
+        /*
+        if (Input.GetMouseButton(0))
+        {
+            // currently still dragging
+            Debug.Log(currentlyPickedUp);
+            
+        }
+        else
+        {
+            // PlacePickUp();
+        }*/
     }
 
 }
