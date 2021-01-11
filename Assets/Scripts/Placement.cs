@@ -23,15 +23,12 @@ public class Placement : MonoBehaviour
         currentlyPickedUp = Instantiate(pickup);
     }
 
-    private GameObject TileFromMouse()
+    private RaycastHit2D RaycastHitFromMouse()
     {
         var mousePosition = Input.mousePosition;
         var mouseRay = cam.ScreenPointToRay(mousePosition);
-        var raycastHit = Physics2D.GetRayIntersection(mouseRay);
-
-        return raycastHit != null
-            ? raycastHit.transform.gameObject
-            : null;
+         
+        return Physics2D.GetRayIntersection(mouseRay);
     }
 
     public void PlacePickUp()
@@ -46,11 +43,8 @@ public class Placement : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            var tile = TileFromMouse();
-            if (tile)
-            {
-                tile.GetComponent<SpriteRenderer>().color = Color.gray;
-            }
+            var raycastHit = RaycastHitFromMouse();
+            Debug.Log(raycastHit.point);
 
          //   PlacePickUp();
         }
